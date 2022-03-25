@@ -1,5 +1,6 @@
 package com.software.TALL.TATHeaderChecker;
 
+import com.software.TALL.TATHeaderChecker.controllers.LanguageController;
 import com.software.TALL.TATHeaderChecker.controllers.RootController;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,8 @@ import javax.annotation.PostConstruct;
 public class LanguageApiConfig extends ResourceConfig {
     @PostConstruct
     private void init() {
-        //registerClasses(LanguageController.class);
+        System.out.println("running languageApiConfig");
+        registerClasses(LanguageController.class);
         registerClasses(RootController.class);
         //register(AuthenticationFilter.class);
 

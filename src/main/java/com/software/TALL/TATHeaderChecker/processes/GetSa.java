@@ -17,31 +17,31 @@ public class GetSa {
 
     public static void run() throws IOException, GeneralSecurityException {
         System.out.println("runGetSa.run()");
-        String name =
-                SA_GET_METHOD;
-
-        Iam iamService = createIamService();
-        Iam.Projects.ServiceAccounts.Keys.Get request =
-                iamService.projects().serviceAccounts().keys().get(name);
-
-        ServiceAccountKey response = request.execute();
-
-        System.out.println(response);
+//        String name =
+//                SA_GET_METHOD;
+//
+//        Iam iamService = createIamService();
+//        Iam.Projects.ServiceAccounts.Keys.Get request =
+//                iamService.projects().serviceAccounts().keys().get(name);
+//
+//        ServiceAccountKey response = request.execute();
+//
+//        System.out.println(response);
     }
 
-    public static Iam createIamService() throws IOException, GeneralSecurityException {
-        System.out.println("runGetSa.createIamService()");
-        HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-
-        GoogleCredential credential = GoogleCredential.getApplicationDefault();
-        if (credential.createScopedRequired()) {
-            credential =
-                    credential.createScoped(Arrays.asList("https://www.googleapis.com/auth/cloud-platform"));
-        }
-
-        return new Iam.Builder(httpTransport, jsonFactory, credential)
-                .setApplicationName("Google-iamSample/0.1")
-                .build();
-    }
+//    public static Iam createIamService() throws IOException, GeneralSecurityException {
+//        System.out.println("runGetSa.createIamService()");
+//        HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+//        JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
+//
+//        GoogleCredential credential = GoogleCredential.getApplicationDefault();
+//        if (credential.createScopedRequired()) {
+//            credential =
+//                    credential.createScoped(Arrays.asList("https://www.googleapis.com/auth/cloud-platform"));
+//        }
+//
+//        return new Iam.Builder(httpTransport, jsonFactory, credential)
+//                .setApplicationName("Google-iamSample/0.1")
+//                .build();
+//    }
 }

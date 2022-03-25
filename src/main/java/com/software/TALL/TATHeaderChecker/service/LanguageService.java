@@ -23,12 +23,12 @@ public class LanguageService {
         return languageDao.getLanguages();
     }
 
-    public ArrayList<Language> getLanguagesForApp(Long appId) {
-        ArrayList<Language> languages = languageDao.getLanguagesForApp(appId);
-        for (Language l : languages) {
-            l.setDownloadSize(l.getDownloadSize().replaceAll("MiB", "MB").replaceAll("GiB", "GB"));
-        }
-        return languages;
-    }
+//    public ArrayList<Language> getLanguagesForApp(Long appId) {
+//        ArrayList<Language> languages = languageDao.getLanguagesForApp(appId);
+//        for (Language l : languages) {
+//            l.setDownloadSize(l.getDownloadSize().replaceAll("MiB", "MB").replaceAll("GiB", "GB"));
+//        }
+//        return languages;
+//    }
 
 }

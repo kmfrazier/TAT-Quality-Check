@@ -1,4 +1,4 @@
-package com.software.TALL.TATHeaderChecker.model;
+package com.software.TALL.TATHeaderChecker.dao;
 
 public class localeDao {
     public String locale = "";

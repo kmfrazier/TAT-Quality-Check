@@ -42,12 +42,4 @@ public class LanguageDao extends JdbcDaoSupport {
         return new ArrayList<>(rows);
     }
 
-    public ArrayList<Language> getLanguagesForApp(Long appId) {
-        List<Language> rows = getJdbcTemplate().query(
-                LanguageSQL.SELECT_LANGUAGES_BY_APP_ID,
-                new Object[]{appId},
-                BeanPropertyRowMapper.newInstance(Language.class));
-        return new ArrayList<>(rows);
-    }
-
 }

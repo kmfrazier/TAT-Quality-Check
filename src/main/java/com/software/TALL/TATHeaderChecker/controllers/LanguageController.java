@@ -31,17 +31,19 @@ public class LanguageController {
     @Path("/")
     public Response getCourses(@Context HttpServletRequest req) {
         ArrayList<Language> languages = languageService.getLanguages();
+        System.out.println("getCourses");
+        System.out.println(languages);
         return Response.ok(languages).build();
     }
-
-    @PermitAll
-    @GET
-    @Path("/app/{id}")
-    public Response getCourses(@Context HttpServletRequest req,
-                               @PathParam("id") Long appId) {
-        ArrayList<Language> languages = languageService.getLanguagesForApp(appId);
-        return Response.ok(languages).build();
-    }
+//
+//    @PermitAll
+//    @GET
+//    @Path("/app/{id}")
+//    public Response getCourses(@Context HttpServletRequest req,
+//                               @PathParam("id") Long appId) {
+//        ArrayList<Language> languages = languageService.getLanguagesForApp(appId);
+//        return Response.ok(languages).build();
+//    }
 
 }
 
