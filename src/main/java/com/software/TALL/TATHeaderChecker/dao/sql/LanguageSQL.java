@@ -28,15 +28,15 @@ public class LanguageSQL {
 
     public static final String SELECT_LANGUAGES = "" +
             "SELECT " +
-            " lang_num_id as id, " +
+            " lang_id as id, " +
             "locale, " +
-            "language_id, " +
+            "lang_text_id AS language_id, " +
             "name, " +
-            "source_document_id as doc_url, " +
+            "sheet_url as doc_url, " +
             "archive_batch, " +
             "alphabet_batch " +
             "FROM " +
-            "   language_import-locales.txt " +
+            "   tall_tools.locale " +
             "ORDER BY id ASC ";
 //            "SELECT " +
 //            "  lang_id as id, " +

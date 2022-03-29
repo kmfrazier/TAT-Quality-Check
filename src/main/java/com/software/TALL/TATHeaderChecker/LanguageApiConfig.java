@@ -9,7 +9,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.annotation.PostConstruct;
 
 @Component
-@ApplicationPath("api/v2")
+@ApplicationPath("/api/v2")
 public class LanguageApiConfig extends ResourceConfig {
     @PostConstruct
     private void init() {

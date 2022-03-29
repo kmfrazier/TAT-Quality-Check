@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-@ComponentScan("software.tall")
+@ComponentScan("com.software.TALL")
 @SpringBootApplication
 public class Process {
 
@@ -15,7 +15,7 @@ public class Process {
 		System.out.println("run Process.main()");
 		ConfigurableApplicationContext context = SpringApplication.run(Process.class, args);
 
-		runSaAuth();
+		//runSaAuth();
 	}
 
 	private static void runSaAuth() {

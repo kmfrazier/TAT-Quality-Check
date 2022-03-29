@@ -19,8 +19,11 @@ dependencies {
 	implementation 'com.google.api-client:google-api-client-gson:1.31.5'
 	//implementation 'com.google.api.services.iam.v1'
 	implementation 'com.google.apis:google-api-services-iam:v1-rev20220217-1.32.1'
+	implementation 'org.springframework.boot:spring-boot-starter-jersey'
 
-	implementation 'io.swagger:swagger-jersey2-jaxrs:1.6.5'
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
+
 	implementation 'com.auth0:java-jwt:3.10.2'
 	implementation 'com.auth0:jwks-rsa:0.11.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -31,10 +34,32 @@ dependencies {
 	 * Spring Framework
 	 */
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-jdbc
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.2.6.RELEASE'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.6.4'
 
 	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.20'
+
+	/**
+	 * Swagger
+	 */
+	// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-annotations
+	implementation group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.1.2'
+
+	// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-jaxrs2
+//    implementation('io.swagger.core.v3:swagger-jaxrs2:2.1.2') {
+//        exclude group: 'io.github.classgraph', module: 'classgraph'
+//    }
+	implementation group: 'io.swagger.core.v3', name: 'swagger-jaxrs2', version: '2.1.2'
+
+	// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-core
+	implementation group: 'io.swagger.core.v3', name: 'swagger-core', version: '2.1.2'
+
+	// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-models
+	implementation group: 'io.swagger.core.v3', name: 'swagger-models', version: '2.1.2'
+
+	// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-integration
+	implementation group: 'io.swagger.core.v3', name: 'swagger-integration', version: '2.1.2'
+
 }
 
 tasks.named('test') {
