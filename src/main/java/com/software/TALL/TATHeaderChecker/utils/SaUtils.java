@@ -1,6 +1,7 @@
 package com.software.TALL.TATHeaderChecker.utils;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.software.TALL.TATHeaderChecker.processes.GetSa;
+import com.software.TALL.TATHeaderChecker.service.SaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.api.client.http.HttpRequestInitializer;
@@ -47,13 +48,11 @@ public class SaUtils {
     public static void runSaUtils() {
         try {
             System.out.println("runSaUtils");
-            GetSa.run();
+            SaService.run();
         } catch (Throwable t) {
             log.error("general security exception.",t);
         }
 
     }
-
-
 
 }

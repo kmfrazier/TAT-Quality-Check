@@ -60,6 +60,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/io.swagger.core.v3/swagger-integration
 	implementation group: 'io.swagger.core.v3', name: 'swagger-integration', version: '2.1.2'
 
+	// https://cloud.google.com/storage/docs/reference/libraries#installing_the_client_library
+	implementation platform('com.google.cloud:libraries-bom:25.1.0')
+	implementation 'com.google.cloud:google-cloud-storage'
 }
 
 tasks.named('test') {

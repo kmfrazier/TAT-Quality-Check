@@ -15,7 +15,7 @@ public class Process {
 		System.out.println("run Process.main()");
 		ConfigurableApplicationContext context = SpringApplication.run(Process.class, args);
 
-		//runSaAuth();
+		runSaAuth();
 	}
 
 	private static void runSaAuth() {
