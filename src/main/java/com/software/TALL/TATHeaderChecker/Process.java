@@ -15,11 +15,11 @@ public class Process {
 		System.out.println("run Process.main()");
 		ConfigurableApplicationContext context = SpringApplication.run(Process.class, args);
 
-		runSaAuth();
+		runSa();
 	}
 
-	private static void runSaAuth() {
-		System.out.println("runSaAuth");
+	private static void runSa() {
+		System.out.println("runSa");
 		SaUtils.runSaUtils();
 	}
 	/*private static void processBatchLocales(String batch) {
