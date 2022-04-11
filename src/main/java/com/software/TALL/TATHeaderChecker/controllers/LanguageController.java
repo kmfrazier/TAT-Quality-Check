@@ -2,6 +2,8 @@ package com.software.TALL.TATHeaderChecker.controllers;
 
 import com.software.TALL.TATHeaderChecker.model.Language;
 import com.software.TALL.TATHeaderChecker.service.LanguageService;
+import com.software.TALL.TATHeaderChecker.utils.DriveUtils;
+import com.software.TALL.TATHeaderChecker.utils.SaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 //import software.tall.api.course.model.CourseStructureVersion;
 //import software.tall.api.course.model.language.Language;
@@ -30,20 +32,16 @@ public class LanguageController {
     @GET
     @Path("/")
     public Response getCourses(@Context HttpServletRequest req) {
-        ArrayList<Language> languages = languageService.getLanguages();
         System.out.println("getCourses");
+        ArrayList<Language> languages = languageService.getLanguages();
+
         System.out.println(languages);
+
+        DriveUtils.run(SaUtils.SaKey, languages);
+
         return Response.ok(languages).build();
     }
-//
-//    @PermitAll
-//    @GET
-//    @Path("/app/{id}")
-//    public Response getCourses(@Context HttpServletRequest req,
-//                               @PathParam("id") Long appId) {
-//        ArrayList<Language> languages = languageService.getLanguagesForApp(appId);
-//        return Response.ok(languages).build();
-//    }
+
 
 }
 

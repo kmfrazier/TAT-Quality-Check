@@ -1,18 +1,22 @@
 package com.software.TALL.TATHeaderChecker.service;
 
+import com.google.api.Service;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.iam.v1.Iam;
+import com.google.api.services.iam.v1.model.ServiceAccountKey;
+import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.collect.Lists;
+import com.software.TALL.TATHeaderChecker.utils.DriveUtils;
 
 import java.io.*;
 import java.security.GeneralSecurityException;
 
-import static com.software.TALL.TATHeaderChecker.utils.Globals.SA_GET_METHOD;
+import static com.software.TALL.TATHeaderChecker.utils.Globals.*;
 //import static com.software.TALL.TATHeaderChecker.utils.Globals.GOOGLE_APPLICATION_CREDENTIALS;
 
 
@@ -69,9 +73,9 @@ public class SaService {
 //        }
 //    }
 
-    private static String CLIENT_SECRET_PATH = "src/main/resources/client_secret.json";
+    //private static String CLIENT_SECRET_PATH = "src/main/resources/client_secret.json";
 
-    public static void run() throws IOException, GeneralSecurityException {
+    public static ServiceAccountKey run() throws IOException, GeneralSecurityException {
         System.out.println("SaService.run()");
 
         Iam iamService = createIamService();
@@ -79,6 +83,12 @@ public class SaService {
                 iamService.projects().serviceAccounts().keys().get(SA_GET_METHOD);
 
         System.out.println(request);
+
+        ServiceAccountKey response = request.execute();
+
+        System.out.println(response);
+
+        return response;
     }
 
     public static Iam createIamService() throws IOException, GeneralSecurityException {
@@ -93,8 +103,8 @@ public class SaService {
 
         // it seems this constructor may be deprecated, and the spot credential would take is
         // instead an HttpRequestInitializer
-        Iam iam = new Iam.Builder(httpTransport,jsonFactory, (HttpRequestInitializer) credential)
-                .setApplicationName("tat-header-checker")
+        Iam iam = new Iam.Builder(httpTransport,jsonFactory, new HttpCredentialsAdapter(credential))
+                .setApplicationName(APPLICATION_NAME)
                 .build();
 
         return iam;

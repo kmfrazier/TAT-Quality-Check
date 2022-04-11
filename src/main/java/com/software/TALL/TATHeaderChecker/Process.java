@@ -1,7 +1,7 @@
 package com.software.TALL.TATHeaderChecker;
 
 import com.software.TALL.TATHeaderChecker.utils.Globals;
-import com.software.TALL.TATHeaderChecker.utils.SaUtils;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -14,13 +14,6 @@ public class Process {
 	public static void main(String[] args) {
 		System.out.println("run Process.main()");
 		ConfigurableApplicationContext context = SpringApplication.run(Process.class, args);
-
-		runSa();
-	}
-
-	private static void runSa() {
-		System.out.println("runSa");
-		SaUtils.runSaUtils();
 	}
 	/*private static void processBatchLocales(String batch) {
 		System.out.println("Processing batch " + batch);
