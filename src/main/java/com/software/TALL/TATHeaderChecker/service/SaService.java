@@ -95,7 +95,7 @@ public class SaService {
         HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
 
-        GoogleCredentials credential = GoogleCredentials.fromStream(new FileInputStream(CLIENT_SECRET_PATH))
+        GoogleCredentials credential = GoogleCredentials.fromStream(new FileInputStream(SA_SECRET_PATH))
                 .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
 
         //is storing necessary?
