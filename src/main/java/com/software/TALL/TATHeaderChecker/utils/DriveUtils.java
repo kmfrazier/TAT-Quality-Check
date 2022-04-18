@@ -1,90 +1,123 @@
 package com.software.TALL.TATHeaderChecker.utils;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.iam.v1.model.ServiceAccountKey;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.google.auth.Credentials;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
-import com.google.auth.oauth2.ServiceAccountJwtAccessCredentials;
-import com.google.common.collect.Lists;
-import com.software.TALL.TATHeaderChecker.auth.JwtGenerator;
 import com.software.TALL.TATHeaderChecker.model.Language;
-import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
+import com.software.TALL.TATHeaderChecker.model.SheetValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.invoke.MethodHandles;
-import java.nio.charset.StandardCharsets;
-import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
+import javax.ws.rs.core.Response;
 
 import static com.software.TALL.TATHeaderChecker.utils.Globals.*;
 import static com.software.TALL.TATHeaderChecker.utils.SaUtils.*;
-import static org.apache.http.conn.params.ConnManagerParams.setTimeout;
 
 public class DriveUtils {
 
     private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE);
-    //private static final String SA_EMAIL = "tat-import@tall-sheet-impor-1614610764322.iam.gserviceaccount.com";
 
-    public static void run(ServiceAccountKey saResponse, ArrayList<Language> languages) {
+    public static Response run(ServiceAccountKey saResponse, ArrayList<Language> languages) {
 
-        //TODO use this file as example
-            // getSheetsService()
-            // getSchema(String spreadsheetId)
-
-        // declare drive or spreadsheet service object to target
         try {
+            // Instantiate Sheets using the service account info
             Sheets sheets = getSheetsService(saResponse);
 
-            // TODO parse
-            for (int i = 2; i < languages.size(); i++) {
+            // Declare sheet tab names
+            ArrayList<SheetValue> sheetValues = new ArrayList<SheetValue>();
 
-                String range1 = "Master List!1:1";
-                String range2 = "Embark Alphabet!1:1";
+            String range1 = "Master List!1:1";
+            String range2 = "Alphabet Embark!1:1";
+            ArrayList<String> ranges = new ArrayList<String>();
+            ranges.add(range1);
+            ranges.add(range2);
+
+            String header1 = "Master List";
+            String header2 = "Alphabet Embark";
+            ArrayList<String> headers = new ArrayList<String>();
+            headers.add(header1);
+            headers.add(header2);
+
+//            String[] badSheets =
+//                    {
+//                            "https://docs.google.com/spreadsheets/d/12zwe-R33F1PM1AEjs57bCDn3fu7Xx5pLtG1tRjVWcOg/edit",
+//                            "https://docs.google.com/spreadsheets/d/16Jb1hh03TML5Etrb-EsqqcMhMfhWJB7gDMdYzV5--XE/edit#gid=1411803589",
+//                            "https://docs.google.com/spreadsheets/d/1q32umGA0SFvUDawZWMgvbIy0BZ1mgRnnlmr3kEClDSQ/edit#gid=1354481109",
+//                            "https://docs.google.com/spreadsheets/d/1-KXGXlSspHd3Sy7SAl7OC7zhAIcIvLpICBL-N8I3l_E/edit#gid=420552297",
+//                            "https://docs.google.com/spreadsheets/d/195UUDuj5N-brFHmqBpM-C-uJOMWz1B9ns0WlL1KWPhA/edit",
+//                            "https://docs.google.com/spreadsheets/d/1MuU1Q14wSNBF2XXAY8oCrmbixXl0dpzaxaqKSr19LdA/edit#gid=845640874"
+//            };
+
+            for (int i = 0; i < languages.size(); i++) {
+
                 String sheetUrl = extractUrl(languages.get(i).getDoc_url());
                 System.out.println(languages.get(i).getDoc_url());
 
-                ValueRange response1 = sheets.spreadsheets().values()
-                        .get(sheetUrl, range1)
-                        .execute();
-                System.out.println(response1.getValues());
+                // TODO iterate over each header/range pair,
+                //  for each iteration pass both into a refactored fetch function
 
-                ValueRange response2 = sheets.spreadsheets().values()
-                        .get(sheetUrl, range2)
-                        .execute();
-                System.out.println(response2.getValues());
+                for (int j = 0; j< ranges.size(); j++) {
+
+                    SheetValue sv = new SheetValue(
+                            languages.get(i).getDoc_url(),
+                            languages.get(i).getName(),
+                            headers.get(j),
+                            ranges.get(j),
+                            sheetUrl
+                    );
+
+                    sheetValues.add(fetch(sheets, sv));
+                }
+
+
+                // if GET fails, then return "{locale} {which tab} Tab does not exist"
+                // else
+                    // if vr is null, then return "{locale} {which tab} Tab exists, header is empty"
+                    // if vr has duplicate, then return "{locale} {which tab} Tab exists, duplicate headers {list header}"
+                    // if vr does not have duplicate, then return "{locale} {which tab} Tab header passes"
+//
+//                try {
+//                    ValueRange response1 = sheets.spreadsheets().values()
+//                            .get(sheetUrl, range1)
+//                            .execute();
+//                    System.out.println(response1.getValues());
+//                } catch(IOException e) {
+//                    System.out.println("get Master List failed for " + languages.get(i).getLocale());
+//                }
+//
+//                try {
+//                    ValueRange response2 = sheets.spreadsheets().values()
+//                            .get(sheetUrl, range2)
+//                            .execute();
+//                    System.out.println(response2.getValues());
+//                } catch(IOException e) {
+//                    System.out.println("get Alphabet Embark failed for " + languages.get(i).getLocale());
+//                }
+
             }
 
+            ArrayList<String> results = new ArrayList<String>();
+            for (int i = 0; i < sheetValues.size(); i++) {
+                results.add(sheetValues.get(i).getMessage());
+            }
+            return Response.ok(results).build();
+
         } catch(IOException e) {
-            System.out.println("getSheetsService failed");
+            String failure = "DriveUtils.run() failed";
+            System.out.println(failure);
+            return Response.ok(e + " " + failure).build();
         }
 
-        // loop through languages
-            // for each language
-            // load spreadsheet url
-            // for each tab in spreadsheet
-                // declare set of column names
-                // for each column
-                    // if column name is in set
-                    //
 
     }
 
@@ -97,27 +130,7 @@ public class DriveUtils {
 
     public static Sheets getSheetsService(ServiceAccountKey saResponse) throws IOException {
 
-//        Credential credential = new GoogleCredential.Builder()
-//                .setTransport(HTTP_TRANSPORT)
-//                .setJsonFactory(JSON_FACTORY)
-//                .setServiceAccountId(saResponse.getName())
-//                .build();
-
-//        GoogleCredentials credential = GoogleCredentials
-//                .fromStream(new FileInputStream(CLIENT_SECRET_PATH))
-//                .createScoped(Lists.newArrayList("https://www.googleapis.com/auth/cloud-platform"));
-
-        //Credential credential = GoogleCredential.fromStream(new )
-
         HttpRequestInitializer httpri = credentialAuthorize();
-
-        // TODO test saResponse vs tall import as the input
-//        HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(ServiceAccountCredentials.fromStream(new FileInputStream(CLIENT_SECRET_PATH))
-//                .createScoped(SCOPES)
-//                .createDelegated(SA_EMAIL)); // TODO what is this?
-//        Drive driveService = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, requestInitializer)
-//                .setApplicationName(APPLICATION_NAME)
-//                .build();
 
         Sheets sheetService = new Sheets.Builder(HTTP_TRANSPORT,JSON_FACTORY, httpri)
                 .setApplicationName(APPLICATION_NAME)
@@ -128,18 +141,6 @@ public class DriveUtils {
 
 
     private static HttpRequestInitializer credentialAuthorize() throws IOException {
-        // Load client secrets.
-//        InputStream in = DriveUtils.class.getResourceAsStream("/client_secret.json");
-//        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-//
-//        // Build flow and trigger user authorization request.
-//        GoogleAuthorizationCodeFlow flow =
-//                new GoogleAuthorizationCodeFlow.Builder(
-//                        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-//                        .setDataStoreFactory(DATA_STORE_FACTORY)
-//                        .setAccessType("offline")
-//                        .build();
-//        Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize(SA_EMAIL);
 
         String url = "mtc-tall-spreadsheet-import-e4f1574bd5af.json";
         ServiceAccountCredentials serviceAccountCredentials =
@@ -152,45 +153,8 @@ public class DriveUtils {
         return requestInitializer;
     }
 
-//    private static Credential jwtAuthorize() throws IOException {
-//
-////        InputStream in = DriveUtils.class.getResourceAsStream(SA_SECRET_PATH);
-////        Credential credential = ServiceAccountJwtAccessCredentials
-////                .fromStream(in);
-//
-//        InputStream in = DriveUtils.class.getResourceAsStream(SA_SECRET_PATH);
-//        String sak = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
-//                .lines()
-//                .collect(Collectors.joining(""));
-//
-//        //TODO what is my audience parameter?
-//        try {
-//            String jwt = JwtGenerator.generateJwt(sak,SA_EMAIL,"aud",60);
-//        } catch (Throwable t){
-//            log.error("jwt generation error.", t);
-//        }
-//        return credential;
-//    }
 
     private static GoogleCredentials googleCredentialsAuthorize() throws IOException{
-//        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(SA_SECRET_PATH));
-//        PrivateKey privateKey = credentials.getServiceAccountPrivateKey();
-//        String privateKeyId = credentials.getServiceAccountPrivateKeyId();
-//
-//        long now = System.currentTimeMillis();
-//
-//        try {
-//            Algorithm algorithm = Algorithm.RSA256(null, privateKey);
-//            String signedJwt = JWT.create()
-//                    .withKeyId(privateKeyId)
-//                    .withIssuer("123456-compute@developer.gserviceaccount.com")
-//                    .withSubject("123456-compute@developer.gserviceaccount.com")
-//                    .withAudience("https://firestore.googleapis.com/")
-//                    .withIssuedAt(new Date(now))
-//                    .withExpiresAt(new Date(now + 3600 * 1000L))
-//                    .sign(algorithm);} catch (Throwable t){
-//            log.error("jwt generation error.", t);
-//        }
 
         GoogleCredentials credentials = GoogleCredentials
                 .fromStream(new FileInputStream(SA_SECRET_PATH))
@@ -208,15 +172,83 @@ public class DriveUtils {
     }
 
     private static String extractUrl(String docId) {
-        //TODO convert
-        //https://docs.google.com/spreadsheets/d/1Gfmom7BEvzIvyB6Ht3Sb5Q50rz8nytuEJJ7kzVs7y1I/edit#gid=420552297
-        //into
-        //1Gfmom7BEvzIvyB6Ht3Sb5Q50rz8nytuEJJ7kzVs7y1I
+        // Example:
+            // https://docs.google.com/spreadsheets/d/1Gfmom7BEvzIvyB6Ht3Sb5Q50rz8nytuEJJ7kzVs7y1I/edit#gid=420552297
+            // becomes:
+            // 1Gfmom7BEvzIvyB6Ht3Sb5Q50rz8nytuEJJ7kzVs7y1I/
         int firstCutoff = docId.indexOf("/d/") + 3;
         String firstString = docId.substring(firstCutoff);
         int secondCutoff = firstString.indexOf("/edit");
         String finalString = firstString.substring(0, secondCutoff);
         return finalString;
+    }
+
+    private static SheetValue fetch(Sheets sheets, SheetValue sv) throws IOException {
+        ArrayList<String> messages = new ArrayList<String>();
+            try {
+                // pull headers from sheet
+                ValueRange response = sheets.spreadsheets().values()
+                        .get(sv.getExtractedUrl(), sv.getRangeToCheck())
+                        .execute();
+                System.out.println(response.getValues());
+
+                // response object will not contain "values" key if there are no headers on the sheet
+                if (!response.containsKey("values")) {
+                    String m = sv.getLanguageName()
+                            + " - "
+                            + sv.getHeaderToCheck()
+                            + " - fail: no headers found";
+
+                    sv.setMessage(m);
+                    return sv;
+                }
+
+                sv.setDoesTabExist(true);
+                ArrayList<String> dup = checkForDuplicates(response);
+
+                // if dup contains any duplicate strings found while checking for duplicates
+                if (dup.size() > 0) {
+                    String m = sv.getLanguageName()
+                            + " - "
+                            + sv.getHeaderToCheck()
+                            + " fail: duplicates found";
+                    sv.setMessage(m);
+                } else {
+                    sv.setDoesHeaderPass(true);
+                    String m = sv.getLanguageName()
+                            + " - "
+                            + sv.getHeaderToCheck()
+                            + " pass";
+                    sv.setMessage(m);
+                }
+
+            } catch(IOException e) {
+                String m = sv.getLanguageName()
+                        + " - "
+                        + sv.getHeaderToCheck()
+                        + " - fail: no headers found";
+                sv.setMessage(m);
+            }
+
+        return sv;
+    }
+
+    private static ArrayList<String> checkForDuplicates(ValueRange vr) {
+        ArrayList<String> indices = new ArrayList<String>();
+        for (int i = 0; i < vr.getValues().size(); i++) {
+            for (int j = 0; j < vr.getValues().size(); j++) {
+                String val1 = vr.getValues().get(0).get(i).toString();
+                String val2 = vr.getValues().get(0).get(j).toString();
+                if (i == j || val1.isEmpty() || val2.isEmpty()) {
+                    continue;
+                } else if (val1 == val2) {
+                    if ( !indices.contains(val1)) {
+                        indices.add(val1);
+                    }
+                }
+            }
+        }
+        return indices;
     }
 
 }

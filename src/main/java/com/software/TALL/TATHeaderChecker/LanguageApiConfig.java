@@ -18,7 +18,6 @@ public class LanguageApiConfig extends ResourceConfig {
         SaUtils.runSaUtils();
         registerClasses(LanguageController.class);
         registerClasses(RootController.class);
-        //register(AuthenticationFilter.class);
 
 
     }

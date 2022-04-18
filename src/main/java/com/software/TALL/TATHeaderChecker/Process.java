@@ -1,7 +1,5 @@
 package com.software.TALL.TATHeaderChecker;
 
-import com.software.TALL.TATHeaderChecker.utils.Globals;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -15,27 +13,7 @@ public class Process {
 		System.out.println("run Process.main()");
 		ConfigurableApplicationContext context = SpringApplication.run(Process.class, args);
 	}
-	/*private static void processBatchLocales(String batch) {
-		System.out.println("Processing batch " + batch);
-		try {
-			LocaleDao localeDao = new LocaleDao();
-			Integer batchNumber = Integer.parseInt(batch);
-			ArrayList<Locale> locales = localeDao.getLocalesByBatch(batchNumber);
-			for (Locale l : locales) {
-				startLocaleThread(l);
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
-	private static void startLocaleThread(Locale locale) {
-		Runnable importProcessThread = new PullSheetProcess(locale);
-		Thread t = new Thread(importProcessThread, ("tat-header-checker-" + locale.locale));
-		t.start();
-	}
-	*/
 	private static void printFinalResults() {
 
 	}
