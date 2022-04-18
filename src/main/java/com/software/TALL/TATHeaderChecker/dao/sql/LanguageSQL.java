@@ -1,5 +1,7 @@
 package com.software.TALL.TATHeaderChecker.dao.sql;
 
+import static com.software.TALL.TATHeaderChecker.utils.Globals.DATABASE_TABLE_ID;
+
 public class LanguageSQL {
 
 //    public static final String SELECT_LANGUAGES_BY_APP_ID = "" +
@@ -36,7 +38,7 @@ public class LanguageSQL {
             "archive_batch, " +
             "alphabet_batch " +
             "FROM " +
-            "   tall_tools.locale " +
+            "   " + DATABASE_TABLE_ID + " " +
             "ORDER BY id ASC ";
 //            "SELECT " +
 //            "  lang_id as id, " +

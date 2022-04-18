@@ -30,6 +30,7 @@ import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.software.TALL.TATHeaderChecker.utils.Globals.*;
@@ -55,15 +56,21 @@ public class DriveUtils {
 
             // TODO parse
             for (int i = 2; i < languages.size(); i++) {
-                String range = "Alphabet Embark!A1:Z";
-//                ValueRange response = sheets.spreadsheets().values()
-//                        .get(languages.get(i).getDoc_url(), range)
-//                        .execute();
-                String docUrl = extractUrl(languages.get(i).getDoc_url());
-                ValueRange response = sheets.spreadsheets().values()
-                        .get(docUrl, range)
+
+                String range1 = "Master List!1:1";
+                String range2 = "Embark Alphabet!1:1";
+                String sheetUrl = extractUrl(languages.get(i).getDoc_url());
+                System.out.println(languages.get(i).getDoc_url());
+
+                ValueRange response1 = sheets.spreadsheets().values()
+                        .get(sheetUrl, range1)
                         .execute();
-                System.out.println(response.getValues());
+                System.out.println(response1.getValues());
+
+                ValueRange response2 = sheets.spreadsheets().values()
+                        .get(sheetUrl, range2)
+                        .execute();
+                System.out.println(response2.getValues());
             }
 
         } catch(IOException e) {
@@ -102,7 +109,7 @@ public class DriveUtils {
 
         //Credential credential = GoogleCredential.fromStream(new )
 
-        Credential credential = credentialAuthorize();
+        HttpRequestInitializer httpri = credentialAuthorize();
 
         // TODO test saResponse vs tall import as the input
 //        HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(ServiceAccountCredentials.fromStream(new FileInputStream(CLIENT_SECRET_PATH))
@@ -112,34 +119,37 @@ public class DriveUtils {
 //                .setApplicationName(APPLICATION_NAME)
 //                .build();
 
-        Sheets sheetService = new Sheets.Builder(HTTP_TRANSPORT,JSON_FACTORY, setTimeout(credential, 60000))
+        Sheets sheetService = new Sheets.Builder(HTTP_TRANSPORT,JSON_FACTORY, httpri)
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
         return sheetService;
     }
 
-    /**
-     * Creates an authorized Credential object.
-     *
-     * @return an authorized Credential object.
-     * @throws IOException
-     */
-    private static Credential credentialAuthorize() throws IOException {
+
+    private static HttpRequestInitializer credentialAuthorize() throws IOException {
         // Load client secrets.
-        InputStream in = DriveUtils.class.getResourceAsStream("/client_secret.json");
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+//        InputStream in = DriveUtils.class.getResourceAsStream("/client_secret.json");
+//        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+//
+//        // Build flow and trigger user authorization request.
+//        GoogleAuthorizationCodeFlow flow =
+//                new GoogleAuthorizationCodeFlow.Builder(
+//                        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
+//                        .setDataStoreFactory(DATA_STORE_FACTORY)
+//                        .setAccessType("offline")
+//                        .build();
+//        Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize(SA_EMAIL);
 
-        // Build flow and trigger user authorization request.
-        GoogleAuthorizationCodeFlow flow =
-                new GoogleAuthorizationCodeFlow.Builder(
-                        HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-                        .setDataStoreFactory(DATA_STORE_FACTORY)
-                        .setAccessType("offline")
-                        .build();
-        Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize(SA_EMAIL);
+        String url = "mtc-tall-spreadsheet-import-e4f1574bd5af.json";
+        ServiceAccountCredentials serviceAccountCredentials =
+                ServiceAccountCredentials.fromStream(Objects.requireNonNull(DriveUtils.class.getClassLoader().getResourceAsStream(url)));
 
-        return credential;
+        GoogleCredentials googleCredentials = serviceAccountCredentials.createScoped(SCOPES);
+
+        HttpRequestInitializer requestInitializer = new HttpCredentialsAdapter(googleCredentials);
+
+        return requestInitializer;
     }
 
 //    private static Credential jwtAuthorize() throws IOException {
