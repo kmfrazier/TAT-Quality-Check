@@ -132,7 +132,7 @@ public class DriveUtils {
 
         HttpRequestInitializer httpri = credentialAuthorize();
 
-        Sheets sheetService = new Sheets.Builder(HTTP_TRANSPORT,JSON_FACTORY, httpri)
+        Sheets sheetService = new Sheets.Builder(HTTP_TRANSPORT,JSON_FACTORY, setTimeout(httpri,60000))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
 
