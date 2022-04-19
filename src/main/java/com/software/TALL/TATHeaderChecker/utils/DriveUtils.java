@@ -66,7 +66,7 @@ public class DriveUtils {
                 // TODO iterate over each header/range pair,
                 //  for each iteration pass both into a refactored fetch function
 
-                for (int j = 0; j< ranges.size(); j++) {
+                for (int j = 0; j < ranges.size(); j++) {
 
                     SheetValue sv = new SheetValue(
                             languages.get(i).getDoc_url(),
@@ -236,12 +236,12 @@ public class DriveUtils {
     private static ArrayList<String> checkForDuplicates(ValueRange vr) {
         ArrayList<String> indices = new ArrayList<String>();
         for (int i = 0; i < vr.getValues().size(); i++) {
-            for (int j = 0; j < vr.getValues().size(); j++) {
+            for (int j = 0; j < vr.getValues().get(0).size(); j++) {
                 String val1 = vr.getValues().get(0).get(i).toString();
                 String val2 = vr.getValues().get(0).get(j).toString();
                 if (i == j || val1.isEmpty() || val2.isEmpty()) {
                     continue;
-                } else if (val1 == val2) {
+                } else if (val1.equalsIgnoreCase(val2)) {
                     if ( !indices.contains(val1)) {
                         indices.add(val1);
                     }
