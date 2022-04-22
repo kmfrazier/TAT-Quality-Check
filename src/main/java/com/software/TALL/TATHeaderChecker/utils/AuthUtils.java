@@ -1,6 +1,5 @@
 package com.software.TALL.TATHeaderChecker.utils;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.SecurityContext;
 

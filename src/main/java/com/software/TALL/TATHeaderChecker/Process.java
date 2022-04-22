@@ -10,12 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 public class Process {
 
 	public static void main(String[] args) {
-		System.out.println("run Process.main()");
 		ConfigurableApplicationContext context = SpringApplication.run(Process.class, args);
-	}
-
-	private static void printFinalResults() {
-
 	}
 
 }

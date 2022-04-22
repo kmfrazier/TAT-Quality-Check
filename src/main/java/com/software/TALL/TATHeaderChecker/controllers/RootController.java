@@ -16,6 +16,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
+// this file is for testing
+
 @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 @Path("/courseroot")
 public class RootController {

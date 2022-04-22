@@ -14,8 +14,7 @@ import javax.annotation.PostConstruct;
 public class LanguageApiConfig extends ResourceConfig {
     @PostConstruct
     private void init() {
-        System.out.println("running languageApiConfig");
-        SaUtils.runSaUtils();
+        //SaUtils.runSaUtils(); This retrieves the public key associated with the private key stored in /resources.
         registerClasses(LanguageController.class);
         registerClasses(RootController.class);
 

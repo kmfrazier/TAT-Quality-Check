@@ -2,8 +2,6 @@ package com.software.TALL.TATHeaderChecker.model;
 
 import com.google.api.services.sheets.v4.model.ValueRange;
 
-import java.util.ArrayList;
-
 public class SheetValue {
 
     public SheetValue(String docUrl, 

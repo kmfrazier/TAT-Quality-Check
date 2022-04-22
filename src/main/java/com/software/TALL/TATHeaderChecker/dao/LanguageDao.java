@@ -7,17 +7,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
-//import software.tall.api.course.dao.sql.GrammarSQL;
-//import software.tall.api.course.dao.sql.LanguageSQL;
-//import software.tall.api.course.model.db.grammar.DGrammar;
-//import software.tall.api.course.model.language.Language;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
