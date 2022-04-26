@@ -1,5 +1,6 @@
 package com.software.TALL.TATHeaderChecker.service;
 
+
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.software.TALL.TATHeaderChecker.model.SheetValue;
@@ -8,6 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class DriveService {
+
+
 
     public static String extractUrl(String docId) {
         // Example:
@@ -21,21 +24,18 @@ public class DriveService {
         return finalString;
     }
 
-    public static SheetValue fetch(Sheets sheets, SheetValue sv) throws IOException {
-        ArrayList<String> messages = new ArrayList<String>();
+    public static SheetValue throttledFetch(Sheets.Spreadsheets.Values.Get gr, SheetValue sv) throws IOException {
+
         try {
             // pull headers from sheet
-            ValueRange response = sheets.spreadsheets().values()
-                    .get(sv.getExtractedUrl(), sv.getRangeToCheck())
-                    .execute();
-            System.out.println(response.getValues());
+            ValueRange response = gr.execute();
 
             // response object will not contain "values" key if there are no headers on the sheet
             if (!response.containsKey("values")) {
                 String m = sv.getLanguageName()
                         + " - "
                         + sv.getHeaderToCheck()
-                        + " - fail: no headers found";
+                        + " - fail: tab does not exist";
 
                 sv.setMessage(m);
                 return sv;
@@ -49,14 +49,14 @@ public class DriveService {
                 String m = sv.getLanguageName()
                         + " - "
                         + sv.getHeaderToCheck()
-                        + " fail: duplicates found";
+                        + " - fail: duplicates found";
                 sv.setMessage(m);
             } else {
                 sv.setDoesHeaderPass(true);
                 String m = sv.getLanguageName()
                         + " - "
                         + sv.getHeaderToCheck()
-                        + " pass";
+                        + " - pass";
                 sv.setMessage(m);
             }
 

@@ -3,6 +3,8 @@ package com.software.TALL.TATHeaderChecker.utils;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.services.iam.v1.model.ServiceAccountKey;
 import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.ValueRange;
+import com.google.common.util.concurrent.RateLimiter;
 import com.software.TALL.TATHeaderChecker.model.Language;
 import com.software.TALL.TATHeaderChecker.model.SheetValue;
 import com.software.TALL.TATHeaderChecker.service.DriveService;
@@ -17,11 +19,16 @@ import static com.software.TALL.TATHeaderChecker.utils.SaUtils.*;
 
 public class DriveUtils {
 
+    // space out the requests at 'rate' per second. 0.50 is optimal
+    private static double rate = 0.50;
+    final static RateLimiter rateLimiter = RateLimiter.create(rate);
+
     public static Response run(ServiceAccountKey saResponse, ArrayList<Language> languages) {
 
         try {
             // Instantiate Sheets using the service account info
             Sheets sheets = getSheetsService(saResponse);
+            ArrayList<Sheets.Spreadsheets.Values.Get> getRequests = new ArrayList<Sheets.Spreadsheets.Values.Get>();
 
             // Declare sheet tabs to check
             ArrayList<SheetValue> sheetValues = new ArrayList<SheetValue>();
@@ -48,9 +55,20 @@ public class DriveUtils {
                             ranges.get(j),
                             sheetUrl
                     );
-                    sheetValues.add(DriveService.fetch(sheets, sv));
+                    Sheets.Spreadsheets.Values.Get getRequest = sheets.spreadsheets().values()
+                            .get(sv.getExtractedUrl(), sv.getRangeToCheck());
+                    getRequests.add(getRequest);
+                    sheetValues.add(sv);
+
+
                 }
             }
+
+            for (int i = 0; i < getRequests.size(); i++) {
+                rateLimiter.acquire();
+                sheetValues.set(i, DriveService.throttledFetch(getRequests.get(i), sheetValues.get(i)));
+            }
+
             ArrayList<String> results = new ArrayList<String>();
             for (int i = 0; i < sheetValues.size(); i++) {
                 results.add(sheetValues.get(i).getMessage());
