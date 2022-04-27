@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.software.TALL.TAT-Header-Checker' is invalid and this project uses 'com.software.TALL.TATHeaderChecker' instead.
+* The original package name 'com.software.TALL.TAT-Header-Checker' is invalid and this project uses 'com.software.TALL.TATChecker' instead.
 
 # Getting Started
 
